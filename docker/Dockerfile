@@ -72,6 +72,9 @@ RUN yarn install && \
 # Install Superset
 RUN pip install --no-cache-dir /tmp/incubator-superset-${SUPERSET_VERSION}
 
+# Remove sources when done
+RUN rm -rf /tmp/incubator-superset-${SUPERSET_VERSION}
+
 # Configure Filesystem
 COPY superset /usr/local/bin
 VOLUME /home/superset \
