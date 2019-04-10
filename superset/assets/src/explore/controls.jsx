@@ -1745,6 +1745,18 @@ export const controls = {
     description: t('Base layer map style'),
   },
 
+  adaptive: {
+    type: 'AdaptiveControl',
+    label: t('Adaptive'),
+    clearable: true,
+    renderTrigger: true,
+    mapStateToProps: state => {
+      // TODO Move adaptive state load into reducer?
+      return {};
+    },
+    description: t('Adaptive configurations'),
+  },
+
   clustering_radius: {
     type: 'SelectControl',
     freeForm: true,

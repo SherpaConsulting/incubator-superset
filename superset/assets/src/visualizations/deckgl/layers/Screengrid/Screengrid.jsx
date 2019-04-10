@@ -166,6 +166,7 @@ class DeckGLScreenGrid extends React.PureComponent {
     return (
       <div>
         <AnimatableDeckGLContainer
+          formData={formData}
           getLayers={this.getLayers}
           start={this.state.start}
           end={this.state.end}

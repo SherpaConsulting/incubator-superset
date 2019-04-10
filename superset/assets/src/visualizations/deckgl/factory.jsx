@@ -87,6 +87,7 @@ export function createDeckGLComponent(getLayer, getPoints) {
       } = this.state;
       return (
         <DeckGLContainer
+          formData={formData}
           mapboxApiAccessToken={payload.data.mapboxApiKey}
           viewport={viewport}
           layers={[layer]}

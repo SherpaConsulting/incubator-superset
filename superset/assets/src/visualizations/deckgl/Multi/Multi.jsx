@@ -93,6 +93,7 @@ class DeckMulti extends React.PureComponent {
 
     return (
       <DeckGLContainer
+        formData={formData}
         mapboxApiAccessToken={payload.data.mapboxApiKey}
         viewport={viewport}
         layers={layers}

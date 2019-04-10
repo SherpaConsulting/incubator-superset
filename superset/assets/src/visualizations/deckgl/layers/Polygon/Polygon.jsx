@@ -239,6 +239,7 @@ class DeckGLPolygon extends React.Component {
     return (
       <div style={{ position: 'relative' }}>
         <AnimatableDeckGLContainer
+          formData={formData}
           getLayers={this.getLayers}
           start={start}
           end={end}

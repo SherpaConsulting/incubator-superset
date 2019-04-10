@@ -22,6 +22,7 @@ import MapGL from 'react-map-gl';
 import DeckGL from 'deck.gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { isEqual } from 'lodash';
+import AdaptiveLayers from './AdaptiveLayers';
 import _ from 'underscore';
 
 const TICK = 2000;  // milliseconds
@@ -97,7 +98,9 @@ export default class DeckGLContainer extends React.Component {
     return this.props.layers;
   }
   render() {
-    const { viewport } = this.props;
+    const { viewport, formData } = this.props;
+    console.log('DeckGLContainer', this.props.formData)
+
     return (
       <MapGL
         {...viewport}
@@ -105,6 +108,7 @@ export default class DeckGLContainer extends React.Component {
         onViewportChange={this.onViewportChange}
         mapboxApiAccessToken={this.props.mapboxApiAccessToken}
       >
+        {formData && formData.adaptive && <AdaptiveLayers {...formData.adaptive} />}
         <DeckGL
           {...viewport}
           layers={this.layers()}

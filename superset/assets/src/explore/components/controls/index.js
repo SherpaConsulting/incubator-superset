@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import AdaptiveControl from './AdaptiveControl';
 import AnnotationLayerControl from './AnnotationLayerControl';
 import BoundsControl from './BoundsControl';
 import CheckboxControl from './CheckboxControl';
@@ -28,6 +29,7 @@ import FixedOrMetricControl from './FixedOrMetricControl';
 import HiddenControl from './HiddenControl';
 import SelectAsyncControl from './SelectAsyncControl';
 import SelectControl from './SelectControl';
+import WrappedSelectControl from './WrappedSelectControl';
 import SliderControl from './SliderControl';
 import SpatialControl from './SpatialControl';
 import TextAreaControl from './TextAreaControl';
@@ -41,6 +43,7 @@ import FilterPanel from './FilterPanel';
 import FilterBoxItemControl from './FilterBoxItemControl';
 
 const controlMap = {
+  AdaptiveControl,
   AnnotationLayerControl,
   BoundsControl,
   CheckboxControl,
@@ -53,6 +56,7 @@ const controlMap = {
   HiddenControl,
   SelectAsyncControl,
   SelectControl,
+  WrappedSelectControl,
   SliderControl,
   SpatialControl,
   TextAreaControl,

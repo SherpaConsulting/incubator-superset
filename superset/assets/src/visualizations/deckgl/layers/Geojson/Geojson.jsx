@@ -142,6 +142,7 @@ function deckGeoJson(props) {
 
   return (
     <DeckGLContainer
+      formData={formData}
       mapboxApiAccessToken={payload.data.mapboxApiKey}
       viewport={viewport}
       layers={[layer]}

@@ -219,6 +219,7 @@ export default class CategoricalDeckGLContainer extends React.PureComponent {
     return (
       <div style={{ position: 'relative' }}>
         <AnimatableDeckGLContainer
+          formData={this.props.formData}
           getLayers={this.getLayers}
           start={this.state.start}
           end={this.state.end}
