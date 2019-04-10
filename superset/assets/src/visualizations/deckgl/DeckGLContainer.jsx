@@ -22,6 +22,7 @@ import MapGL from 'react-map-gl';
 import DeckGL from 'deck.gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { isEqual } from 'lodash';
+import _ from 'underscore';
 
 const TICK = 2000;  // milliseconds
 
@@ -64,6 +65,10 @@ export default class DeckGLContainer extends React.Component {
   }
   onViewportChange(viewport) {
     const vp = Object.assign({}, viewport);
+    Object.keys(vp).forEach(k => {
+      if (_.isFunction(vp[k]))
+        delete vp[k];
+    });
     // delete vp.width;
     // delete vp.height;
     const newVp = { ...this.state.previousViewport, ...vp };
