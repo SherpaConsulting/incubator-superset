@@ -4,7 +4,7 @@ import { t } from '@superset-ui/translation';
 import ControlHeader from '../ControlHeader';
 import VirtualizedSelect from 'react-virtualized-select';
 import OnPasteSelect from '../../../components/OnPasteSelect';
-import CollectionControl from './CollectionControl';
+import AdaptiveCollectionControl from './AdaptiveCollectionControl';
 import { SupersetClient } from '@superset-ui/connection';
 import shortid from 'shortid';
 
@@ -70,7 +70,7 @@ export default class AdaptiveControl extends React.Component {
 
   onLayersChange(layers) {
     console.log(layers);
-    this.onChange({ layers });
+    this.onChange({ layers: layers.join(',') });
   }
 
   onChange(newValues) {
@@ -93,6 +93,8 @@ export default class AdaptiveControl extends React.Component {
       layers: selectedLayers,
     } = value || {};
 
+    console.log(selectedLayers)
+
     return (
       <div className="adaptive-configuration">
         <ControlHeader label={t('Basemap from ') + ' ' + AdaptiveConfig.name} />
@@ -106,24 +108,20 @@ export default class AdaptiveControl extends React.Component {
           clearable
           closeOnSelect
           onChange={this.onBasemapChange}
-          optionRenderer={this.optionRenderer}
-          valueRenderer={this.valueRenderer}
           selectWrap={VirtualizedSelect}
         />
-        <CollectionControl
+        <AdaptiveCollectionControl
           label={t('Layers from') + ' ' + AdaptiveConfig.name}
-          controlName="WrappedSelectControl"
-          itemGenerator={() => ({ key: shortid.generate(), value: null })}
           name={`adaptive-layers-${name}`}
           placeholder={t('choose layers')}
-          options={layers}
-          value={selectedLayers || []}
-          labelKey="label"
-          valueKey="value"
-          clearable
+          controlProps={{
+            placeholder: t('choose layer'),
+            options: layers,
+            labelKey: "label",
+            valueKey: "value",
+          }}
+          value={selectedLayers !== undefined ? selectedLayers.split(',') : []}
           onChange={this.onLayersChange}
-          optionRenderer={this.optionRenderer}
-          valueRenderer={this.valueRenderer}
           selectWrap={VirtualizedSelect}
         />
       </div>

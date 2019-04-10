@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import AdaptiveCollectionControl from './AdaptiveCollectionControl';
 import AdaptiveControl from './AdaptiveControl';
 import AnnotationLayerControl from './AnnotationLayerControl';
 import BoundsControl from './BoundsControl';
@@ -43,6 +44,7 @@ import FilterPanel from './FilterPanel';
 import FilterBoxItemControl from './FilterBoxItemControl';
 
 const controlMap = {
+  AdaptiveCollectionControl,
   AdaptiveControl,
   AnnotationLayerControl,
   BoundsControl,
