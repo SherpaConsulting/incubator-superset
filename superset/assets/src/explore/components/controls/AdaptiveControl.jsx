@@ -7,6 +7,7 @@ import OnPasteSelect from '../../../components/OnPasteSelect';
 import AdaptiveCollectionControl from './AdaptiveCollectionControl';
 import { SupersetClient } from '@superset-ui/connection';
 import shortid from 'shortid';
+import { provideAdaptiveConfig } from 'src/utils/adaptive';
 
 const AdaptiveConfig = {
   baseUrl: 'https://a3latest.avinet.no/',
@@ -14,117 +15,107 @@ const AdaptiveConfig = {
   guiUuid: 'f434dede-e23b-4149-bcd0-37651d1dd66e'
 };
 
-export default class AdaptiveControl extends React.Component {
+function toOption(layer) {
+  return { label: layer.name, value: layer.uuid };
+}
 
+class AdaptiveControl extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onBasemapChange = this.onBasemapChange.bind(this);
-    this.onLayersChange = this.onLayersChange.bind(this);
-
     this.state = {
-      values: [],
-      basemaps: [],
+      baselayers: [],
       layers: []
     }
+
+    this.onBaselayerChange = this.onBaselayerChange.bind(this);
+    this.onLayersChange = this.onLayersChange.bind(this);
   }
 
-  componentDidMount() {
-    this.loadConfig();
-  }
-
-  loadConfig() {
-    fetch(AdaptiveConfig.baseUrl + 'WebServices/client/Configuration.asmx/ReadAppConfig', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          guuid: AdaptiveConfig.guiUuid
-        })
-      })
-      .then(r => r.json())
-      .then(json => {
-        if (json.d.success) {
-          const data = json.d.data;
-          const layers = data.find(d => d.key === 'layers').value;
-
-          const toOption = l => ({ label: l.name, value: l.id, layer: l });
-
-          this.setState({
-            basemaps: layers.filter(l => l.is_base_layer).map(toOption),
-            layers: layers.filter(l => !l.is_base_layer).map(toOption)
-          });
-        }
-      });
-  }
-
-  onBasemapChange(opt) {
-    let basemap = null;
-    if (opt) {
-      basemap = opt.value;
+  static getDerivedStateFromProps(props, state) {
+    if (props.baselayers !== state.prevBaselayers
+      || props.layers !== state.prevLayers) {
+      return {
+        prevBaselayers: props.baselayers,
+        prevLayers: props.layers,
+        baselayers: props.baselayers.map(toOption),
+        layers: props.layers.map(toOption),
+      };
     }
-    this.onChange({ basemap });
+    return null;  }
+
+  onBaselayerChange(opt) {
+    let baselayer = null;
+    if (opt) {
+      baselayer = opt.value;
+    }
+    this.onChange({ baselayer });
   }
 
   onLayersChange(layers) {
-    console.log(layers);
-    this.onChange({ layers: layers.join(',') });
+    this.onChange({ layers });
   }
 
-  onChange(newValues) {
-    this.props.onChange({ ...this.props.value, ...newValues });
+  onChange(newValue) {
+    this.props.onChange({ ...this.props.value, ...newValue });
   }
 
   render() {
     const {
-      basemaps,
-      layers,
-    } = this.state;
-
-    const {
+      adaptiveConfigLoaded,
       name,
       value,
     } = this.props;
 
     const {
-      basemap: selectedBasemap,
+      baselayers,
+      layers,
+    } = this.state;
+
+    const {
+      baselayer: selectedBaselayer,
       layers: selectedLayers,
     } = value || {};
 
-    console.log(selectedLayers)
-
     return (
       <div className="adaptive-configuration">
-        <ControlHeader label={t('Basemap from ') + ' ' + AdaptiveConfig.name} />
-        <OnPasteSelect
-          name={`adaptive-basemap-${name}`}
-          placeholder={t('choose a basemap')}
-          options={basemaps}
-          value={selectedBasemap}
-          labelKey="label"
-          valueKey="value"
-          clearable
-          closeOnSelect
-          onChange={this.onBasemapChange}
-          selectWrap={VirtualizedSelect}
-        />
-        <AdaptiveCollectionControl
-          label={t('Layers from') + ' ' + AdaptiveConfig.name}
-          name={`adaptive-layers-${name}`}
-          placeholder={t('choose layers')}
-          controlProps={{
-            placeholder: t('choose layer'),
-            options: layers,
-            labelKey: "label",
-            valueKey: "value",
-          }}
-          value={selectedLayers !== undefined ? selectedLayers.split(',') : []}
-          onChange={this.onLayersChange}
-          selectWrap={VirtualizedSelect}
-        />
+        {!adaptiveConfigLoaded
+          ? <div className='loading'>{t('Loading')}</div>
+          : (
+            <React.Fragment>
+              <ControlHeader label={t('Base layer from ') + ' ' + AdaptiveConfig.name} />
+              <OnPasteSelect
+                name={`adaptive-basemap-${name}`}
+                placeholder={t('choose a baselayer')}
+                options={baselayers}
+                value={selectedBaselayer}
+                labelKey="label"
+                valueKey="value"
+                clearable
+                closeOnSelect
+                onChange={this.onBaselayerChange}
+                selectWrap={VirtualizedSelect}
+              />
+              <AdaptiveCollectionControl
+                label={t('Layers from') + ' ' + AdaptiveConfig.name}
+                name={`adaptive-layers-${name}`}
+                placeholder={t('choose layers')}
+                controlProps={{
+                  placeholder: t('choose layer'),
+                  options: layers,
+                  labelKey: "label",
+                  valueKey: "value",
+                }}
+                value={selectedLayers !== undefined ? selectedLayers : []}
+                onChange={this.onLayersChange}
+                selectWrap={VirtualizedSelect}
+              />
+            </React.Fragment>
+          )
+        }
       </div>
     );
   }
 }
+
+export default provideAdaptiveConfig({ adaptiveUrl: AdaptiveConfig.baseUrl, guiUuid: AdaptiveConfig.guiUuid })(AdaptiveControl);

@@ -99,7 +99,6 @@ export default class DeckGLContainer extends React.Component {
   }
   render() {
     const { viewport, formData } = this.props;
-    console.log('DeckGLContainer', this.props.formData)
 
     return (
       <MapGL
@@ -108,7 +107,7 @@ export default class DeckGLContainer extends React.Component {
         onViewportChange={this.onViewportChange}
         mapboxApiAccessToken={this.props.mapboxApiAccessToken}
       >
-        {formData && formData.adaptive && <AdaptiveLayers {...formData.adaptive} />}
+        {formData && formData.adaptive && <AdaptiveLayers config={formData.adaptive} />}
         <DeckGL
           {...viewport}
           layers={this.layers()}
