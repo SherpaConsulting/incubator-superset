@@ -1,0 +1,44 @@
+.adaptive-layers-switch {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  padding: 8px;
+}
+
+.adaptive-layers-switch * {
+  pointer-events: all;
+}
+
+.adaptive-layers-switch button {
+  width: 40px;
+  height: 40px;
+}
+
+.adaptive-layers-switch--content {
+  background: rgba(255,255,255,.9);
+  border: 1px solid #b3b3b3;
+  border-radius: 2px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+  padding: 4px;
+}
+
+.adaptive-layers-switch--layer {
+  position: relative;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.adaptive-layers-switch--layer:hover {
+  background: rgba(200,200,200,.3);
+}
+
+.adaptive-layers-switch--layer i.fa {
+  color: #666;
+  margin-right: 8px;
+  width: 14px;
+}
+
+.adaptive-layers-switch--layer.active i.fa {
+  color: #333;
+}

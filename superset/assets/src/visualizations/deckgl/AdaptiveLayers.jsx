@@ -1,8 +1,8 @@
 import React from 'react';
 import WmsLayer from './WmsLayer';
 import { provideAdaptiveConfig, provideBaatToken } from 'src/utils/adaptive';
-import { addDangerToast } from 'src/messageToasts/actions';
 import WmsContextProvider from './WmsContext';
+import AdaptiveLayersSwitch from './AdaptiveLayersSwitch';
 
 const AdaptiveConfig = {
   baseUrl: 'https://a3latest.avinet.no/',
@@ -12,6 +12,21 @@ const AdaptiveConfig = {
 };
 
 class AdaptiveLayers extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeLayers: null
+    };
+
+    this.onActiveLayersChange = this.onActiveLayersChange.bind(this);
+  }
+
+  onActiveLayersChange(activeLayers) {
+    console.log("Toggled some layers", activeLayers);
+    this.setState({ activeLayers });
+  }
+
   renderLayer(idx, layer) {
     if (!layer) return null;
 
@@ -54,17 +69,42 @@ class AdaptiveLayers extends React.Component {
 
   render() {
     const {
-      config: { baselayer: selectedBaselayer, layers: selectedLayers },
-      baselayers,
-      layers,
+      // Config indicates what layers from the configured instance should be used in this chart
+      config: { baselayer, layers, displayLayerSwitch },
+      // The following are all available layer configs as received from Adaptive
+      baselayers: baselayerConfigs,
+      layers: layerConfigs,
       adaptiveConfigLoaded
     } = this.props;
 
+    // Postpone render until config is available
     if (!adaptiveConfigLoaded) return null;
 
+    const {
+      activeLayers
+    } = this.state;
+
+    // Map selected layer UUIDs to layer objects and use array index as zIndex to preserve
+    // configured render order when toggling layers on/off
+    const availableLayers = layers
+      .map((layer, idx) => ({ zIndex: idx, layer: layerConfigs.find(l => l.uuid === layer) }))
+      .filter(l => !!l.layer);
+
+    // Filter available layers with the active layers list to only display layers toggled on. If
+    // activeLayers is not set yet, render all layers.
+    const renderedLayers = availableLayers
+      .filter(l => !activeLayers || activeLayers.indexOf(l.layer.uuid) !== -1);
+
     return <WmsContextProvider>
-      {selectedBaselayer && this.renderLayer(-1, baselayers.find(layer => layer.uuid === selectedBaselayer))}
-      {selectedLayers && selectedLayers.map((layer, idx) => this.renderLayer(idx, layers.find(l => l.uuid === layer)))}
+      {baselayer && this.renderLayer(-1, baselayerConfigs.find(layer => layer.uuid === baselayer))}
+      {layers && renderedLayers.map((l) => this.renderLayer(l.zIndex, l.layer))}
+      {layers && displayLayerSwitch && (
+        <AdaptiveLayersSwitch
+          layers={availableLayers.map(({ layer }) => layer)}
+          activeLayers={activeLayers || layers}
+          onChange={this.onActiveLayersChange}
+        />
+      )}
     </WmsContextProvider>
   }
 }

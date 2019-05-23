@@ -8,6 +8,7 @@ import AdaptiveCollectionControl from './AdaptiveCollectionControl';
 import { SupersetClient } from '@superset-ui/connection';
 import shortid from 'shortid';
 import { provideAdaptiveConfig } from 'src/utils/adaptive';
+import CheckboxControl from './CheckboxControl';
 
 const AdaptiveConfig = {
   baseUrl: 'https://a3latest.avinet.no/',
@@ -30,6 +31,7 @@ class AdaptiveControl extends React.Component {
 
     this.onBaselayerChange = this.onBaselayerChange.bind(this);
     this.onLayersChange = this.onLayersChange.bind(this);
+    this.onDisplayLayerSwitchChange = this.onDisplayLayerSwitchChange.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -56,6 +58,10 @@ class AdaptiveControl extends React.Component {
     this.onChange({ layers });
   }
 
+  onDisplayLayerSwitchChange(displayLayerSwitch) {
+    this.onChange({ displayLayerSwitch });
+  }
+
   onChange(newValue) {
     this.props.onChange({ ...this.props.value, ...newValue });
   }
@@ -75,6 +81,7 @@ class AdaptiveControl extends React.Component {
     const {
       baselayer: selectedBaselayer,
       layers: selectedLayers,
+      displayLayerSwitch
     } = value || {};
 
     return (
@@ -83,33 +90,52 @@ class AdaptiveControl extends React.Component {
           ? <div className='loading'>{t('Loading')}</div>
           : (
             <React.Fragment>
-              <ControlHeader label={t('Base layer from ') + ' ' + AdaptiveConfig.name} />
-              <OnPasteSelect
-                name={`adaptive-basemap-${name}`}
-                placeholder={t('choose a baselayer')}
-                options={baselayers}
-                value={selectedBaselayer}
-                labelKey="label"
-                valueKey="value"
-                clearable
-                closeOnSelect
-                onChange={this.onBaselayerChange}
-                selectWrap={VirtualizedSelect}
-              />
-              <AdaptiveCollectionControl
-                label={t('Layers from') + ' ' + AdaptiveConfig.name}
-                name={`adaptive-layers-${name}`}
-                placeholder={t('choose layers')}
-                controlProps={{
-                  placeholder: t('choose layer'),
-                  options: layers,
-                  labelKey: "label",
-                  valueKey: "value",
-                }}
-                value={selectedLayers !== undefined ? selectedLayers : []}
-                onChange={this.onLayersChange}
-                selectWrap={VirtualizedSelect}
-              />
+              <div className="row space-1">
+                <div className="col-xs-12">
+                  <div className="Control">
+                    <ControlHeader label={t('Base layer from ') + ' ' + AdaptiveConfig.name} />
+                      <OnPasteSelect
+                        name={`adaptive-basemap-${name}`}
+                        placeholder={t('choose a baselayer')}
+                        options={baselayers}
+                        value={selectedBaselayer}
+                        labelKey="label"
+                        valueKey="value"
+                        clearable
+                        closeOnSelect
+                        onChange={this.onBaselayerChange}
+                        selectWrap={VirtualizedSelect}
+                      />
+                  </div>
+                </div>
+              </div>
+              <div className="row space-1">
+                <div className="col-xs-12">
+                  <AdaptiveCollectionControl
+                    label={t('Layers from') + ' ' + AdaptiveConfig.name}
+                    name={`adaptive-layers-${name}`}
+                    placeholder={t('choose layers')}
+                    controlProps={{
+                      placeholder: t('choose layer'),
+                      options: layers,
+                      labelKey: "label",
+                      valueKey: "value",
+                    }}
+                    value={selectedLayers !== undefined ? selectedLayers : []}
+                    onChange={this.onLayersChange}
+                    selectWrap={VirtualizedSelect}
+                  />
+                </div>
+              </div>
+              <div className="row space-1">
+                <div className="col-xs-12">
+                  <CheckboxControl
+                    label={t('Display layer switch')}
+                    value={displayLayerSwitch}
+                    onChange={this.onDisplayLayerSwitchChange}
+                  />
+                </div>
+              </div>
             </React.Fragment>
           )
         }

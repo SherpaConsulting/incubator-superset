@@ -43,6 +43,7 @@ class WmsLayer extends React.Component {
       id,
       type: 'raster',
       source: {
+        id,
         type: 'raster',
         tiles: [
           fullUrl
@@ -51,6 +52,12 @@ class WmsLayer extends React.Component {
       },
       paint: {}
     }, zIndex);
+  }
+
+  componentWillUnmount() {
+    const { id } = this.props;
+    const { removeLayer } = this.context;
+    removeLayer(id);
   }
 
   render() { return null; }

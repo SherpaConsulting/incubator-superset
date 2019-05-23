@@ -1,5 +1,6 @@
 import React from 'react';
 import { _MapContext as MapContext } from 'react-map-gl';
+import { map } from 'd3';
 
 export const WmsContext = React.createContext({});
 
@@ -8,6 +9,7 @@ class WmsContextProviderImpl extends React.Component {
     super(props);
 
     this.addLayer = this.addLayer.bind(this);
+    this.removeLayer = this.removeLayer.bind(this);
 
     this.layers = [];
   }
@@ -33,14 +35,30 @@ class WmsContextProviderImpl extends React.Component {
     this.layers.sort((a, b) => a.zIndex - b.zIndex);
 
     if (this.mapLoaded) {
-      map.addLayer(layer);
+      const idx = this.layers.findIndex(({ layer: l }) => l.id === layer.id);
+      var beforeId = null;
+      if (idx < this.layers.length - 1)
+        beforeId = this.layers[idx + 1].layer.id;
+
+      console.log('Add layer', idx, beforeId, this.layers)
+      map.addLayer(layer, beforeId);
     }
+  }
+
+  removeLayer(id) {
+    const { map } = this.props;
+    if (map.getLayer(id))
+      map.removeLayer(id);
+    if (map.getSource(id))
+      map.removeSource(id);
+    this.layers = this.layers.filter(({ layer }) => layer.id !== id);
   }
 
   render() {
     return (
       <WmsContext.Provider value={{
-        addLayer: this.addLayer
+        addLayer: this.addLayer,
+        removeLayer: this.removeLayer
       }}>
         {this.props.children}
       </WmsContext.Provider>
