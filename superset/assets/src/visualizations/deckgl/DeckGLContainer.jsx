@@ -41,6 +41,18 @@ const defaultProps = {
   setControlValue: () => {},
 };
 
+const emptyMapStyle = {
+  version: 8,
+  glyphs: 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+  sprite: 'mapbox://sprites/mapbox/light-v9',
+  sources: {},
+  layers: [{
+    id: 'background',
+    type: 'background',
+    paint: { "background-color": "rgba(0,0,0,0)" }
+  }],
+};
+
 export default class DeckGLContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -100,10 +112,15 @@ export default class DeckGLContainer extends React.Component {
   render() {
     const { viewport, formData } = this.props;
 
+    var mapStyle = this.props.mapStyle;
+    if (mapStyle === 'empty') {
+      mapStyle = emptyMapStyle;
+    }
+
     return (
       <MapGL
         {...viewport}
-        mapStyle={this.props.mapStyle}
+        mapStyle={mapStyle}
         onViewportChange={this.onViewportChange}
         mapboxApiAccessToken={this.props.mapboxApiAccessToken}
       >

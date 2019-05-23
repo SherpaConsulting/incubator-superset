@@ -1740,6 +1740,7 @@ export const controls = {
       ['mapbox://styles/mapbox/satellite-streets-v9', 'Satellite Streets'],
       ['mapbox://styles/mapbox/satellite-v9', 'Satellite'],
       ['mapbox://styles/mapbox/outdoors-v9', 'Outdoors'],
+      ['empty', 'Empty'],
     ],
     default: 'mapbox://styles/mapbox/light-v9',
     description: t('Base layer map style'),
