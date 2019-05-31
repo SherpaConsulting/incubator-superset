@@ -17,8 +17,6 @@ class WmsLayer extends React.Component {
     }
 
     let fullUrl = url;
-    // 'https://geodata.state.nj.us/imagerywms/Natural2015
-    // ?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
 
     if (type === 'WMTS') {
       fullUrl += `&service=WMTS&request=GetTile&version=${version}&request=GetTile`;
@@ -36,8 +34,6 @@ class WmsLayer extends React.Component {
 
 
     fullUrl = fullUrl.replace('?&', '?');
-
-    console.log('Adding layer', url, fullUrl);
 
     addLayer({
       id,

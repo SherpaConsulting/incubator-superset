@@ -18,14 +18,22 @@ class WmsContextProviderImpl extends React.Component {
     const { map } = this.props;
 
     if (map) {
-      map.on('load', () => {
-        this.mapLoaded = true;
-        this.layers.forEach(({ layer }) => {
-          console.log('Add layer to map', layer)
-          map.addLayer(layer);
-        })
-      });
+      if (map.loaded()) {
+        this.onMapLoad();
+      } else {
+        map.on('load', () => {
+          this.onMapLoad();
+        });
+      }
     }
+  }
+
+  onMapLoad() {
+    const { map } = this.props;
+    this.mapLoaded = true;
+    this.layers.forEach(({ layer }) => {
+      map.addLayer(layer);
+    });
   }
 
   addLayer(layer, zIndex) {
@@ -40,13 +48,13 @@ class WmsContextProviderImpl extends React.Component {
       if (idx < this.layers.length - 1)
         beforeId = this.layers[idx + 1].layer.id;
 
-      console.log('Add layer', idx, beforeId, this.layers)
       map.addLayer(layer, beforeId);
     }
   }
 
   removeLayer(id) {
     const { map } = this.props;
+
     if (map.getLayer(id))
       map.removeLayer(id);
     if (map.getSource(id))
