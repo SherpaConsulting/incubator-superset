@@ -37,6 +37,7 @@ export default {
         ['mapbox_style', 'viewport'],
         ['color_picker', 'autozoom'],
         ['grid_size', 'extruded'],
+        ['adaptive'],
       ],
     },
     {

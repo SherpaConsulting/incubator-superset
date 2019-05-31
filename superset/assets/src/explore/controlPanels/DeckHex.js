@@ -37,6 +37,7 @@ export default {
         ['color_picker', 'autozoom'],
         ['grid_size', 'extruded'],
         ['js_agg_function', null],
+        ['adaptive'],
       ],
     },
     {

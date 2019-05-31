@@ -39,6 +39,7 @@ export default {
       controlSetRows: [
         ['mapbox_style', 'viewport'],
         ['autozoom', null],
+        ['adaptive'],
       ],
     },
     {
