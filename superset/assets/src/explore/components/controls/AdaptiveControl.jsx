@@ -10,12 +10,6 @@ import shortid from 'shortid';
 import { provideAdaptiveConfig } from 'src/utils/adaptive';
 import CheckboxControl from './CheckboxControl';
 
-const AdaptiveConfig = {
-  baseUrl: 'https://a3latest.avinet.no/',
-  name: 'Adaptive3 latest',
-  guiUuid: 'f434dede-e23b-4149-bcd0-37651d1dd66e'
-};
-
 function toOption(layer) {
   return { label: layer.name, value: layer.uuid };
 }
@@ -63,12 +57,13 @@ class AdaptiveControl extends React.Component {
   }
 
   onChange(newValue) {
-    this.props.onChange({ ...this.props.value, ...newValue });
+    this.props.onChange({ ...this.props.value, gui: this.props.gui, ...newValue });
   }
 
   render() {
     const {
       adaptiveConfigLoaded,
+      gui,
       name,
       value,
     } = this.props;
@@ -93,7 +88,7 @@ class AdaptiveControl extends React.Component {
               <div className="row space-1">
                 <div className="col-xs-12">
                   <div className="Control">
-                    <ControlHeader label={t('Base layer from ') + ' ' + AdaptiveConfig.name} />
+                    <ControlHeader label={t('Base layer from') + ' ' + gui.name} />
                       <OnPasteSelect
                         name={`adaptive-basemap-${name}`}
                         placeholder={t('choose a baselayer')}
@@ -112,7 +107,7 @@ class AdaptiveControl extends React.Component {
               <div className="row space-1">
                 <div className="col-xs-12">
                   <AdaptiveCollectionControl
-                    label={t('Layers from') + ' ' + AdaptiveConfig.name}
+                    label={t('Layers from') + ' ' + gui.name}
                     name={`adaptive-layers-${name}`}
                     placeholder={t('choose layers')}
                     controlProps={{
@@ -144,4 +139,4 @@ class AdaptiveControl extends React.Component {
   }
 }
 
-export default provideAdaptiveConfig({ adaptiveUrl: AdaptiveConfig.baseUrl, guiUuid: AdaptiveConfig.guiUuid })(AdaptiveControl);
+export default provideAdaptiveConfig(AdaptiveControl);

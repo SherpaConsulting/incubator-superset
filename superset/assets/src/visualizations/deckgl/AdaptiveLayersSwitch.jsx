@@ -36,7 +36,6 @@ export default class AdaptiveLayersSwitch extends React.Component {
 
     const isActive = uuid => activeLayers.indexOf(uuid) !== -1;
 
-    console.log('Rendered switch', layers, activeLayers);
     return (
       <div className="adaptive-layers-switch">
         <button className="btn btn-sm btn-default" onClick={this.onToggleSwitch}><i className="fa fa-map"/></button>

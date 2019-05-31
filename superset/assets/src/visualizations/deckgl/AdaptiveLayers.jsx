@@ -4,13 +4,6 @@ import { provideAdaptiveConfig, provideBaatToken } from 'src/utils/adaptive';
 import WmsContextProvider from './WmsContext';
 import AdaptiveLayersSwitch from './AdaptiveLayersSwitch';
 
-const AdaptiveConfig = {
-  baseUrl: 'https://a3latest.avinet.no/',
-  name: 'Adaptive3 latest',
-  guiId: 1,
-  guiUuid: 'f434dede-e23b-4149-bcd0-37651d1dd66e'
-};
-
 class AdaptiveLayers extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +16,6 @@ class AdaptiveLayers extends React.Component {
   }
 
   onActiveLayersChange(activeLayers) {
-    console.log("Toggled some layers", activeLayers);
     this.setState({ activeLayers });
   }
 
@@ -49,7 +41,7 @@ class AdaptiveLayers extends React.Component {
     }
   
     if (layer.is_internal) {
-      url += '&GUI=' + AdaptiveConfig.guiId;
+      url += '&GUI=' + this.props.config.gui.id;
     }
   
     return (
@@ -110,8 +102,8 @@ class AdaptiveLayers extends React.Component {
 }
 
 export default
-  provideAdaptiveConfig({ adaptiveUrl: AdaptiveConfig.baseUrl, guiUuid: AdaptiveConfig.guiUuid })(
-    provideBaatToken({ adaptiveUrl: AdaptiveConfig.baseUrl })(
+  provideAdaptiveConfig(
+    provideBaatToken(
       AdaptiveLayers
     )
   );
